@@ -4,7 +4,9 @@ const express = require('express');
 const app = express();
 
 //listen for requests
-app.listen(process.env.PORT || 3000)
+const server = app.listen(process.env.PORT || 3000, () => {
+    console.log('listening on port ' + server.address().port)
+})
 
 app.get('/', (req, res) => {
     res.send('home')
