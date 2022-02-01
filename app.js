@@ -1,4 +1,5 @@
 const express = require('express');
+const authRouter = require('./routers/authRouter');
 
 //express app
 const app = express();
@@ -18,3 +19,9 @@ app.get('/', (req, res) => {
 app.get('/about/', (req, res) => {
     res.send('about');
 });
+
+app.post('/signup', (req, res) => {
+    res.json(req.body)
+});
+
+app.use(authRouter);
