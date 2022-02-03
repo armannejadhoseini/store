@@ -1,4 +1,3 @@
-const { Int32 } = require('mongodb')
 const mongoose = require('mongoose')
 const { isEmail } = require('validator')
 const Schema = mongoose.Schema
@@ -22,12 +21,18 @@ const userSchema = new Schema({
         minlength: [8,'Password must atleat be 8 chracters']
     },
     type: {
-        type: Int32
+        type: Boolean,
+        required: true
     },
     token: {
         type: String
     }
 })
+
+userSchema.pre('save', function(next) {
+    console.log(this);
+});
+
 
 const userModel = mongoose.model('user', userSchema)
 
