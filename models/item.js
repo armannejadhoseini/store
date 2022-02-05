@@ -27,10 +27,11 @@ const itemSchema = new Schema({
         type: String,
         required: true
     },
-    comments: [{
-        type: Schema.Types.ObjectId,
-        ref: 'comment'
-    }]
+    price: {
+        type: Number,
+        required: true,
+        min: 1
+    }
 });
 
 const itemModel = mongoose.model('item', itemSchema);

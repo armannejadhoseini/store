@@ -35,6 +35,6 @@ app.get('/about/', (req, res) => {
 });
 
 //routers
-app.use(authRouter);
-app.use(itemRouter);
-app.use(commentRouter);
+app.use('/users', authRouter);
+app.use('/items', itemRouter);
+app.use('/comments', commentRouter);

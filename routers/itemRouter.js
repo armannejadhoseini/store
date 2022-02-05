@@ -3,8 +3,10 @@ const itemController = require('../controllers/itemController')
 
 const router = Router()
 
-router.get('/items/', itemController.getItems)
-router.post('/item/', itemController.makeItem)
+router.get('/', itemController.getItems)
+router.post('/', itemController.createItems)
+router.patch('/:id', itemController.updateItems)
+router.delete('/:id', itemController.deleteItems)
 
 //export the router
 module.exports = router;

@@ -1,41 +1,59 @@
 const itemModel = require('../models/item');
-const commentModel = require('../models/comment');
-const { getComments } = require('./commentController');
 
+
+//get all items
 const getItems = async (req, res) => {
     try {
-        items = await itemModel.find()
-        .populate({
-            path: 'comments._id',
-            model: 'comment',
-
-        }).exec()
-        res.json(items)
+        items = await itemModel.find();
+        res.json(items);
     } catch (err) {
-        res.json(err);
+        res.status(400).json({ message: err.message });
     }
 };
 
-const makeItem = async (req, res) => {
-    const { category, subCategory, name, description, color, image } = req.body;
-    const newItem = new itemModel({
-        category: category,
-        subCategory: subCategory,
-        name: name,
-        description: description,
-        color: color,
-        image: image
-    });
+//create an item
+const createItems = async (req, res) => {
     try {
-        const item = await newItem.save();
+        const item = new itemModel({
+            category: req.body.category,
+            subCategory: req.body.subCategory,
+            name: req.body.name,
+            description: req.body.description,
+            color: req.body.color,
+            image: req.body.image,
+            price: req.body.price
+        });
+        await item.save();
         res.status(201).json(item);
     } catch (err) {
-        res.status(400).json(err);
-    };
+        res.status(400).json({ message: err.message });
+    }
+}
+
+//update an item
+const updateItems = async (req, res) => {
+    try {
+        item = await itemModel.findOneAndUpdate({_id: req.params.id}, req.body)
+        res.json(item);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}
+
+//delete an item
+const deleteItems = async (req, res) => {
+    try {
+        item = await itemModel.findByIdAndDelete({_id: req.params.id})
+        res.json(item);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
 }
 
 
 module.exports = {
     getItems,
-    makeItem
+    createItems,
+    updateItems,
+    deleteItems
 };

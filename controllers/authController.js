@@ -3,55 +3,37 @@ const bcrypt = require('bcrypt');
 
 //routes
 const signUp = async (req, res) => {
-    const { name, email, password, type } = req.body;
-    const newUser = new userModel({
-        name: name,
-        email: email,
-        password: password,
-        type: type
-    });
-
     try {
-        const user = await newUser.save();
+        const user = new userModel({
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            type: req.body.type
+        });
+        await user.save();
         res.status(201).json(user);
     } catch (err) {
-        res.status(400).json(err);
+        res.status(400).json({ message: err.message });
+
     };
 };
 
 const signIn = async (req, res) => {
     const { email, password } = req.body;
 
-    if(!(email && password)) {
-        res.status(400).send('All fields are required');
+    //check the req for both fields
+    if (!(email && password)) {
+        res.status(400).json({ message: 'All fields are required' });
     }
 
+    //make a user obj and check if it exists
     const user = await userModel.findOne({ email: email })
-
     if (!user) {
-        let error = {
-            error: 'User does not exist'
-        };
-        res.json(error);
+        res.status(400).json({ message: 'User does not exist' });
     } else {
-        let status = {
-            logedIn: null
-        };
-
-    const loginstatus = await bcrypt.compare(password, user.password);
-    
-    if (loginstatus) {
-        status = {
-            logedIn: true
-        }
+        const status = await user.compare(password);
+        res.json(status);
     }
-    else {
-        status = {
-            logedIn: false
-        }
-    };
-    res.json(status)
-}
 };
 
 //export routes

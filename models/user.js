@@ -38,6 +38,13 @@ userSchema.pre('save', true, async function(next, done) {
     done();
 });
 
+userSchema.methods.compare = async function (password) {
+    const status = {
+        loginstatus: await bcrypt.compare(password, this.password)
+    }
+    return status
+}
+
 
 const userModel = mongoose.model('user', userSchema);
 
