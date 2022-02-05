@@ -31,6 +31,11 @@ const itemSchema = new Schema({
         type: Number,
         required: true,
         min: 1
+    },
+    seller: {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+        required: true
     }
 });
 

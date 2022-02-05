@@ -4,8 +4,21 @@ const itemModel = require('../models/item');
 //get all items
 const getItems = async (req, res) => {
     try {
-        items = await itemModel.find();
-        res.json(items);
+        items = await itemModel.find().populate('seller', 'name').exec((err, items) => {
+            res.json(items);
+        });
+
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
+//get an item
+const getItem = async (req, res) => {
+    try {
+        item = await itemModel.find({ _id: req.params.id }).populate('seller', 'name').exec((err, items) => {
+            res.json(items);
+        });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -21,7 +34,8 @@ const createItems = async (req, res) => {
             description: req.body.description,
             color: req.body.color,
             image: req.body.image,
-            price: req.body.price
+            price: req.body.price,
+            seller: req.body.seller
         });
         await item.save();
         res.status(201).json(item);
@@ -33,7 +47,7 @@ const createItems = async (req, res) => {
 //update an item
 const updateItems = async (req, res) => {
     try {
-        item = await itemModel.findOneAndUpdate({_id: req.params.id}, req.body)
+        item = await itemModel.findOneAndUpdate({ _id: req.params.id }, req.body)
         res.json(item);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -43,7 +57,7 @@ const updateItems = async (req, res) => {
 //delete an item
 const deleteItems = async (req, res) => {
     try {
-        item = await itemModel.findByIdAndDelete({_id: req.params.id})
+        item = await itemModel.findByIdAndDelete({ _id: req.params.id })
         res.json(item);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -53,6 +67,7 @@ const deleteItems = async (req, res) => {
 
 module.exports = {
     getItems,
+    getItem,
     createItems,
     updateItems,
     deleteItems
